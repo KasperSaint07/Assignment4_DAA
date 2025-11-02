@@ -7,6 +7,9 @@ import common.GraphUtils;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import graph.scc.TarjanSCC;
+import graph.scc.SCCResult;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -27,7 +30,17 @@ public class Main {
                     System.out.println("GRAPH SUMMARY");
                     GraphUtils.printSummary(g);
                 }
-                // Заглушки на будущее: scc | topo | dag-sp | dag-longest
+                case "scc" -> {
+                    TarjanSCC tarjan = new TarjanSCC();
+                    SCCResult s = tarjan.find(g);
+
+                    System.out.println("SCC COUNT: " + s.components.size());
+                    for (int i = 0; i < s.components.size(); i++) {
+                        var comp = s.components.get(i);
+                        System.out.println("  #" + i + " size=" + comp.size() + " -> " + comp);
+                    }
+                    System.out.println("METRICS: dfsVisits=" + s.dfsVisits + ", dfsEdges=" + s.dfsEdges);
+                }
                 default -> {
                     System.out.println("Unknown task: " + task);
                     printUsage();
